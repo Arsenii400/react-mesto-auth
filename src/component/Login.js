@@ -19,7 +19,7 @@ const Login = (props) => {
         props.handleLogin();
         history.push('/');
       } else {
-        setMessage('Некорректно заполнено одно из полей')
+        console.log('Некорректно заполнено одно из полей');
       }
     })
   }
