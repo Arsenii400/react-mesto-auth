@@ -1,8 +1,6 @@
 import '../index.css';
 import { useEffect, useState } from 'react';
-import Header from './Header';
 import Main from './Main';
-import Footer from './Footer';
 import PopupWithForm from './PopupWithForm';
 import ImagePopup from './ImagePopup';
 import CurrentUserContext from '../contexts/CurrentUserContext';
@@ -10,7 +8,14 @@ import { api } from '../utils/Api.js';
 import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
-import { Route, ProtectedRoute, Switch } from 'react-router-dom';
+import { Route, Switch, useHistory, Redirect } from 'react-router-dom';
+import ProtectedRoute from './ProtectedRoute';
+import Login from './Login';
+import Register from './Register';
+import InfoToolTip from './InfoToolTip';
+import * as Auth from '../utils/Auth';
+import approve from '../images/approve.png'
+import denied from '../images/denied.png'
 
 function App() {
 
@@ -19,11 +24,42 @@ function App() {
   const [isEditProfilePopupOpen, setisEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setisAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setisEditAvatarPopupOpen] = useState(false);
+  const [isRegisterSuccessPopupOpen, setisRegisterSuccessPopupOpen] = useState(false);
+  const [isRegisterDeniedPopupOpen, setisRegisterDeniedPopupOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState({ isOpen: false, card: {} });
-
   const [cards, setCards] = useState([]);
-
   const [currentUser, setCurrentUser] = useState({});
+  const history = useHistory();
+
+  const [email, setEmail] = useState('');
+
+  const handleLogin = () => {
+    setLoggedIn(true);
+    console.log(loggedIn);
+  }
+
+  function signOut() {
+    localStorage.removeItem('token');
+    history.push('/sign-in');
+  }
+
+  const tokenCheck = () => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      Auth.getContent(token)
+        .then((res) => {
+          if (res) {
+            setEmail(res.data.email);
+            setLoggedIn(true);
+            history.push('/')
+          }
+        })
+    }
+  }
+
+  useEffect(() => {
+    tokenCheck();
+  }, [])
 
   useEffect(() => {
     api.getInitialCards()
@@ -47,6 +83,14 @@ function App() {
   }, []
   );
 
+  function handleRegisterSuccessPopup() {
+    setisRegisterSuccessPopupOpen(true);
+  }
+
+  function handleRegisterDeniedPopup() {
+    setisRegisterDeniedPopupOpen(true);
+  }
+
   function handleEditProfileClick() {
     setisEditProfilePopupOpen(true);
   }
@@ -63,6 +107,8 @@ function App() {
     setisEditProfilePopupOpen(false);
     setisAddPlacePopupOpen(false);
     setisEditAvatarPopupOpen(false);
+    setisRegisterSuccessPopupOpen(false);
+    setisRegisterDeniedPopupOpen(false);
     setSelectedCard({ isOpen: false, card: {} })
   }
 
@@ -131,32 +177,57 @@ function App() {
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
-        <Header />
+
         <Switch>
           <Route path="/sign-up">
-            <SignUp />
+            <Register
+              onRegisterSuccessPopup={handleRegisterSuccessPopup}
+              onRegisterDeniedPopup={handleRegisterDeniedPopup}
+            />
           </Route>
           <Route path="/sign-in">
-            <SignIn />
+            <Login handleLogin={handleLogin} />
           </Route>
-          <ProtectedRoute path="/">
-            <Main
-              cards={cards}
-              onCardLike={handleCardLike}
-              onCardDelete={handleCardDelete}
-              onEditProfile={handleEditProfileClick}
-              onAddPlace={handleAddPlaceClick}
-              onEditAvatar={handleEditAvatarClick}
-              onCardClick={handleCardClick} />
-          </ProtectedRoute>
+
+          <ProtectedRoute exact path="/"
+            component={Main}
+            loggedIn={loggedIn}
+            cards={cards}
+            userMail={email}
+            onSignOut={signOut}
+            onCardLike={handleCardLike}
+            onCardDelete={handleCardDelete}
+            onEditProfile={handleEditProfileClick}
+            onAddPlace={handleAddPlaceClick}
+            onEditAvatar={handleEditAvatarClick}
+            onCardClick={handleCardClick}
+          />
+
         </Switch>
-        <Footer />
 
         <EditProfilePopup onUpdateUser={handleUpdateUser} isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} />
 
         <AddPlacePopup onAddPlace={handleAddPlaceSubmit} isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} />
 
         <EditAvatarPopup onUpdateAvatar={handleUpdateAvatar} isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} />
+
+        <InfoToolTip
+          p1="Вы успешно"
+          p2="Зарегистрировались"
+          approve={approve}
+          isOpen={isRegisterSuccessPopupOpen}
+          name="successReg"
+          container="container"
+          onClose={closeAllPopups} />
+
+        <InfoToolTip
+          p1="Что-то пошло не так!"
+          p2="Попробуйте ещё раз."
+          approve={denied}
+          isOpen={isRegisterDeniedPopupOpen}
+          name="negativeReg"
+          container="container"
+          onClose={closeAllPopups} />
 
         <PopupWithForm
           name="deleteConfirmation"
