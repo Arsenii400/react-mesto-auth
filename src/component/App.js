@@ -8,7 +8,7 @@ import { api } from '../utils/Api.js';
 import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
-import { Route, Switch, useHistory, Redirect } from 'react-router-dom';
+import { Route, Switch, useHistory } from 'react-router-dom';
 import ProtectedRoute from './ProtectedRoute';
 import Login from './Login';
 import Register from './Register';

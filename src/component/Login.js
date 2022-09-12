@@ -7,15 +7,7 @@ const Login = (props) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const [message, setMessage] = useState('');
-
   const history = useHistory();
-
-  const ResetForm = () => {
-    setEmail('')
-    setPassword('')
-    setMessage('')
-  }
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -24,12 +16,10 @@ const Login = (props) => {
       console.log(data)
       console.log(data.token)
       if (data.token) {
-        // ResetForm();
         props.handleLogin();
         history.push('/');
       } else {
         setMessage('Некорректно заполнено одно из полей')
-         console.log(message);
       }
     })
   }
