@@ -1,8 +1,8 @@
-export const BASE_URL = 'https://auth.nomoreparties.co';
+export const base_url = 'https://auth.nomoreparties.co';
 
 export const register = (password, email) => {
   return fetch(
-    `${BASE_URL}/signup`,
+    `${base_url}/signup`,
     {
       method: 'POST',
       headers: {
@@ -21,15 +21,11 @@ export const register = (password, email) => {
         return (e)
       }
     })
-    .then((res) => {
-      return res;
-    })
-    .catch((err) => console.log(err));
 };
 
 export const authorize = (password, email) => {
   return fetch(
-    `${BASE_URL}/signin`,
+    `${base_url}/signin`,
     {
       method: 'POST',
       headers: {
@@ -49,14 +45,12 @@ export const authorize = (password, email) => {
       } else {
         return;
       }
-
     })
-    .catch((err) => console.log(err));
 }
 
 export const getContent = (token) => {
   return fetch(
-    `${BASE_URL}/users/me`,
+    `${base_url}/users/me`,
     {
       method: 'GET',
       headers: {
@@ -66,9 +60,8 @@ export const getContent = (token) => {
       }
     })
     .then((res) => {
-      return res.json();
-    })
-    .then((res) => {
-      return (res)
+      if (res.ok) {
+        return res.json();
+      }
     })
 }

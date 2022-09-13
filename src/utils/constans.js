@@ -85,7 +85,7 @@ export const editProfileForm = document.querySelector('.popup__form_type_edit');
 export const addCardForm = document.querySelector('.popup__form_type_add');
 export const updateAvatarForm = document.querySelector('.popup__form_type_updateAvatar');
 
-export const ApiConfiguration = {
+export const apiConfiguration = {
   url:'https://mesto.nomoreparties.co/v1/cohort-45',
   token: 'a04b0996-96db-486f-bf5a-22c04dae71aa',
 }

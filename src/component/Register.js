@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import Header from "./Header";
-import * as Auth from '../utils/Auth';
+import * as auth from '../utils/Auth';
 
 const Register = (props) => {
-
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -12,7 +11,7 @@ const Register = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    Auth.register(password, email)
+    auth.register(password, email)
       .then((res) => {
         if (res) {
           history.push('/sign-in')
@@ -22,6 +21,9 @@ const Register = (props) => {
           console.log('Некорректно заполнено одно из полей');
         }
       })
+      .catch((err) => {
+        console.log(err);
+      })
   }
 
   return (
@@ -30,9 +32,20 @@ const Register = (props) => {
       <div className="login">
         <h1 className="login__header">Регистрация</h1>
         <form onSubmit={handleSubmit} className="login__form">
-          <input value={email} onChange={(e) => setEmail(e.target.value)} className="login__input login__input_type_email" placeholder="Email" />
-          <input value={password} onChange={(e) => setPassword(e.target.value)} className="login__input login__input_type_password" placeholder="Пароль" />
-          <button type="submit" className="login__button login__button_type_enter">Зарегистрироваться</button>
+          <input
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="login__input login__input_type_email"
+            placeholder="Email" />
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="login__input login__input_type_password"
+            placeholder="Пароль" />
+          <button
+            type="submit"
+            className="login__button login__button_type_enter">Зарегистрироваться</button>
         </form>
         <div className="login__questionContainer">
           <h2 className="login__regQuestion">Уже зарегистрированы?</h2>

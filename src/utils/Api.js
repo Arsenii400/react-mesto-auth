@@ -1,9 +1,16 @@
-import { ApiConfiguration } from "./constans";
+import { apiConfiguration } from "./constans";
 
 export class Api {
   constructor(options) {
     this._url = options.url;
     this._token = options.token;
+  }
+
+  _checkAnswer = (res) => {
+    if (res.ok) {
+      return res.json();
+    }
+    return Promise.reject(`Что-то пошло не так: ${res.status}`);
   }
 
   getInitialCards() {
@@ -14,12 +21,7 @@ export class Api {
         'Content-Type': 'application/json'
       }
     })
-      .then((res) => {
-        if (res.ok) {
-          return res.json();
-        }
-        return Promise.reject(`Что-то пошло не так: ${res.status}`);
-      })
+      .then(this._checkAnswer);
   }
 
   addCard(card) {
@@ -34,12 +36,7 @@ export class Api {
         link: card.link
       })
     })
-      .then((res) => {
-        if (res.ok) {
-          return res.json();
-        }
-        return Promise.reject(`Что-то пошло не так: ${res.status}`);
-      })
+      .then(this._checkAnswer)
   }
 
   deleteCard(id) {
@@ -49,12 +46,7 @@ export class Api {
         authorization: this._token
       }
     })
-      .then((res) => {
-        if (res.ok) {
-          return res.json();
-        }
-        return Promise.reject(`Что-то пошло не так: ${res.status}`)
-      })
+      .then(this._checkAnswer)
   }
 
   getProfileInfo() {
@@ -65,12 +57,7 @@ export class Api {
         'Content-Type': 'application/json'
       }
     })
-      .then((res) => {
-        if (res.ok) {
-          return res.json();
-        }
-        return Promise.reject(`Что-то пошло не так: ${res.status}`);
-      })
+      .then(this._checkAnswer)
   }
 
   patchProfileEdit(data) {
@@ -85,12 +72,7 @@ export class Api {
         about: data.about,
       })
     })
-      .then((res) => {
-        if (res.ok) {
-          return res.json();
-        }
-        return Promise.reject(`Что-то пошло не так: ${res.status}`);
-      })
+      .then(this._checkAnswer)
   }
 
   toggleLike(cardId, _isLiked) {
@@ -101,12 +83,7 @@ export class Api {
         'Content-Type': 'application/json'
       }
     })
-      .then((res) => {
-        if (res.ok) {
-          return res.json();
-        }
-        return Promise.reject(`Что-то пошло не так: ${res.status}`);
-      })
+      .then(this._checkAnswer)
   }
 
   updateAvatar(data) {
@@ -120,15 +97,10 @@ export class Api {
         avatar: data.avatar,
       })
     })
-      .then((res) => {
-        if (res.ok) {
-          return res.json();
-        }
-        return Promise.reject(`Что-то пошло не так: ${res.status}`);
-      })
+      .then(this._checkAnswer)
   }
 }
 
 export const api = new Api(
-  ApiConfiguration
+  apiConfiguration
 );

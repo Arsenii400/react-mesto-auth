@@ -1,21 +1,20 @@
-import '../index.css';
 import { useEffect, useState } from 'react';
+import { Route, Switch, useHistory } from 'react-router-dom';
 import Main from './Main';
 import PopupWithForm from './PopupWithForm';
 import ImagePopup from './ImagePopup';
-import CurrentUserContext from '../contexts/CurrentUserContext';
-import { api } from '../utils/Api.js';
 import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
-import { Route, Switch, useHistory } from 'react-router-dom';
 import ProtectedRoute from './ProtectedRoute';
 import Login from './Login';
 import Register from './Register';
 import InfoToolTip from './InfoToolTip';
-import * as Auth from '../utils/Auth';
+import * as auth from '../utils/Auth';
 import approve from '../images/approve.png'
 import denied from '../images/denied.png'
+import CurrentUserContext from '../contexts/CurrentUserContext';
+import { api } from '../utils/api.js';
 
 function App() {
 
@@ -35,7 +34,6 @@ function App() {
 
   const handleLogin = () => {
     setLoggedIn(true);
-    console.log(loggedIn);
   }
 
   function signOut() {
@@ -46,13 +44,16 @@ function App() {
   const tokenCheck = () => {
     const token = localStorage.getItem('token');
     if (token) {
-      Auth.getContent(token)
+      auth.getContent(token)
         .then((res) => {
           if (res) {
             setEmail(res.data.email);
             setLoggedIn(true);
             history.push('/')
           }
+        })
+        .catch((err) => {
+          console.log(err);
         })
     }
   }
@@ -64,23 +65,27 @@ function App() {
   useEffect(() => {
     api.getInitialCards()
       .then((res) => {
-        setCards(res);
+        if (loggedIn) {
+          setCards(res);
+        }
       })
       .catch((err) => {
         console.log(err);
       })
-  }, []
+  }, [loggedIn]
   );
 
   useEffect(() => {
     api.getProfileInfo()
       .then((res) => {
-        setCurrentUser(res);
+        if (loggedIn) {
+          setCurrentUser(res);
+        }
       })
       .catch((err) => {
         console.log(err);
       })
-  }, []
+  }, [loggedIn]
   );
 
   function handleRegisterSuccessPopup() {

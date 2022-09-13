@@ -18,8 +18,6 @@ function Header(props) {
       {pathname === '/sign-up' && (<div className="header__data">
         <Link to="/sign-in" className="header__data_type_enter">Войти</Link>
       </div>)}
-
-
     </header>)
 }
 
