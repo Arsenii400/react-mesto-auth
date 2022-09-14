@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import Header from "./Header";
-import * as auth from '../utils/Auth';
+import * as auth from '../utils/auth';
 
 const Login = (props) => {
   const [email, setEmail] = useState('');

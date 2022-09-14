@@ -34,7 +34,7 @@ function Card(props) {
   }
 
   return (
-    <li className="element" key={`"${props.data._id}"`}>
+    <li className="element">
       <button onClick={handleDeleteClick} className={cardDeleteButtonClassName} type="button" aria-label="trash" />
       <img onClick={handleClick} src={props.data.link} alt={props.data.name} className="element__img" />
       <div className="element__wrapper">

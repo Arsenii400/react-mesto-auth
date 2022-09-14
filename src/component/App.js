@@ -10,7 +10,7 @@ import ProtectedRoute from './ProtectedRoute';
 import Login from './Login';
 import Register from './Register';
 import InfoToolTip from './InfoToolTip';
-import * as auth from '../utils/Auth';
+import * as auth from '../utils/auth';
 import approve from '../images/approve.png'
 import denied from '../images/denied.png'
 import CurrentUserContext from '../contexts/CurrentUserContext';
@@ -63,28 +63,28 @@ function App() {
   }, [])
 
   useEffect(() => {
-    api.getInitialCards()
-      .then((res) => {
-        if (loggedIn) {
+    if (loggedIn) {
+      api.getInitialCards()
+        .then((res) => {
           setCards(res);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      })
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+    }
   }, [loggedIn]
   );
 
   useEffect(() => {
-    api.getProfileInfo()
-      .then((res) => {
-        if (loggedIn) {
+    if (loggedIn) {
+      api.getProfileInfo()
+        .then((res) => {
           setCurrentUser(res);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      })
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+    }
   }, [loggedIn]
   );
 
